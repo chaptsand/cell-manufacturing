@@ -101,12 +101,18 @@ for prepDay=1:3
     end
     
     e_process = actxserver('excel.application');
-    activeFile = [pwd '\' filename1];
+    e_process.DisplayAlerts = false;
+    activeFile = fullfile(pwd,filename1);
     e_file_source = e_process.Workbooks.Open(activeFile);
-    e_process.ActiveWorkbook.Worksheets.Item('Sheet1').Delete;
-    e_process.ActiveWorkbook.Worksheets.Item('Sheet2').Delete;
-    e_process.ActiveWorkbook.Worksheets.Item('Sheet3').Delete;
+    keepSheets = {'Dilution prep DWP'};
+    for k = e_file_source.Worksheets.Count:-1:1
+        ws = e_file_source.Worksheets.Item(k);
+        if ~any(strcmp(ws.Name,keepSheets))
+            ws.Delete;
+        end
+    end
     e_file_source.Save;
+    e_file_source.Close(false);
     e_process.Quit;
     
     makeDWPcmds = [];
@@ -152,7 +158,13 @@ for prepDay=1:3
         idx = strcmp(dilTargetWells{t,1},makeDWPcmds(:,2));
         dilTargetWells(t,2) = num2cell(sum(cell2mat(volT(idx))));
     end
-    dilTargetWells = sortrows(dilTargetWells,1); openvar('dilTargetWells');
+    dilTargetWells = sortrows(dilTargetWells,1);
+    assignin('base','dilTargetWells',dilTargetWells);
+    try
+        openvar('dilTargetWells');
+    catch
+        disp('GenDilutionPrep: dilTargetWells exported to base workspace.');
+    end
     
     %   Split transfer volumes greater than 1000 ul (for media) or 300 ul
     %   (for reagent) into multiple transfer commands.
@@ -275,7 +287,14 @@ for prepDay=1:3
     end
     volTotPrep = cell2mat(volTotal(:,2))+(numExtraWells*volDWPtoFP_toPrep)+volDWPdead;
     volTotal(:,3) = num2cell(volTotPrep);
-    openvar('volTotal'); openvar('DilutionPrep');
+    assignin('base','volTotal',volTotal);
+    assignin('base','DilutionPrep',DilutionPrep);
+    try
+        openvar('volTotal');
+        openvar('DilutionPrep');
+    catch
+        disp('GenDilutionPrep: volTotal and DilutionPrep exported to base workspace.');
+    end
     
     %   Check number of transfer occurrences for each destination well in
     %   formulation plate. Same number of transfers (= number of factors)
