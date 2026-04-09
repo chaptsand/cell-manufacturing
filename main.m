@@ -89,8 +89,14 @@ if strcmp(status,'n')
         expMaximum = 0;
     end
 elseif strcmp(status,'c')
+    [workspaceFile,workspacePath] = uigetfile( ...
+        {'*_workspace.mat','HD-DE workspace (*.mat)'; '*.mat','MAT-file (*.mat)'}, ...
+        'Select workspace datafile');
+    if isequal(workspaceFile,0)
+        error('main: No workspace file selected.');
+    end
+    load(fullfile(workspacePath,workspaceFile)); % load datafile
     diary([fHeader '_cmdHist.txt']); % append new log to existing log file
-    uigetfile('*_workspace.mat','Select workspace datafile'); % load datafile
 end
 
 if run == 0
