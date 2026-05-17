@@ -70,7 +70,7 @@ calcMax = 1;
     % 1 -- for experimental purposes where solution (conventional culture
     %      condition/gold standard combination) is known as the positive
     %      control (PC)
-numDimension = 14;
+numDimension = 9; % iPSC stage 1 factor count
 benchmarkName = 'rb';
 maxRunAllowed = 7; % = maximum number of generations allowed - 1
 popSizeFactor = 3;
@@ -105,8 +105,8 @@ interVarComb = 10; % inter-experimental variability (%CV) to simulate
 %%  EXPERIMENTAL CONDITION PARAMETERS
 numChannel = 4;
 seedingDensity = 5E5; % target initial seeding density (cells/ml)
-cellName = 'Tcells';
-baseMedia = 'DMEMF12';
+cellName = 'iPSCstage1';
+baseMedia = 'TBD';
 wellTotVol = 100; % final culture volume (ul)
 initialCount = seedingDensity*(wellTotVol/1000);
 numCells = 0; % initialization step only

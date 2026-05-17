@@ -65,7 +65,7 @@ global Xselect BlankRange CalibRange NCint Xfin Ufin NCfin PCfin StockRange
 if strcmp(status,'n')
     initialize_define_variables; % initialize and define variables
     
-    numComb = 118/2;
+    numComb = popSizeFactor*numDimension;
     genFirstPop = 'd';
     
     disp(['Population size set to = ' num2str(numComb)]);
